@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtualenv (uv lays it down at .venv/)
+.venv/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Environment files (we'll add real ones later, never commit secrets)
+.env
+.env.local
+
+# --- Project-specific ---
+# Raw API snapshots regenerate on every run; never commit them.
+data/
+
+# DuckDB file lands here in Day 12; treat the same way (ephemeral, regen-able).
+*.duckdb
+*.duckdb.wal
