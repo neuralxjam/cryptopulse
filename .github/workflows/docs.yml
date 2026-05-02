@@ -1,0 +1,57 @@
+name: dbt Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'models/**'
+      - 'dbt_project.yml'
+      - 'cryptopulse.duckdb'
+  workflow_dispatch:
+
+# Pages deployment requires these two permissions.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy runs at a time; cancel any in-progress deploy on new push.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.11.8"
+
+      - name: Install Python 3.11
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Generate dbt docs
+        # --profiles-dir . uses the profiles.yml committed to the repo root.
+        # dbt reads cryptopulse.duckdb (also committed) to build the catalog.
+        run: uv run dbt docs generate --profiles-dir .
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

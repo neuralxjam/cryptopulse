@@ -3,34 +3,60 @@ version: 2
 models:
   - name: mart_daily_returns
     description: >
-      Latest price + 24h return for every coin in the top 100,
-      from the most recent snapshot. One row per coin.
+      Latest price and 24-hour return for every coin in the top 100,
+      sourced from the most recent CoinGecko snapshot. One row per coin,
+      ordered by market cap descending. Used as the main leaderboard in
+      the Streamlit dashboard.
     columns:
       - name: coin_id
-        description: "CoinGecko coin identifier"
+        description: "CoinGecko slug identifier (e.g. 'bitcoin', 'ethereum')"
         data_tests:
           - unique
           - not_null
+      - name: symbol
+        description: "Short ticker symbol in lowercase (e.g. 'btc', 'eth')"
+      - name: coin_name
+        description: "Human-readable coin name (e.g. 'Bitcoin')"
       - name: current_price
-        description: "Price in USD from the latest snapshot"
+        description: "Price in USD at the time of the snapshot"
         data_tests:
           - not_null
+      - name: market_cap
+        description: "Market capitalisation in USD (coins * price)"
+      - name: total_volume
+        description: "Total trading volume across all exchanges in the last 24 hours, in USD"
+      - name: price_change_pct_24h
+        description: "Percentage price change over the prior 24-hour window (can be negative)"
+      - name: last_updated
+        description: "Timestamp CoinGecko last refreshed this coin's data"
       - name: snapshot_at
-        description: "Timestamp of the snapshot this row came from"
+        description: "UTC timestamp when ingest.py pulled this snapshot from the API"
         data_tests:
           - not_null
 
   - name: mart_top_movers
     description: >
-      Top 10 gainers + top 10 losers by 24h % change,
-      from the most recent snapshot.
+      Top 10 gainers and top 10 losers by 24-hour percentage price change,
+      from the most recent CoinGecko snapshot. Coins with null
+      price_change_pct_24h are excluded. Used in the Streamlit dashboard
+      movers section.
     columns:
       - name: coin_id
-        description: "CoinGecko coin identifier"
+        description: "CoinGecko slug identifier"
         data_tests:
           - not_null
+      - name: symbol
+        description: "Short ticker symbol in lowercase"
+      - name: coin_name
+        description: "Human-readable coin name"
+      - name: current_price
+        description: "Price in USD at the time of the snapshot"
+      - name: price_change_pct_24h
+        description: "Percentage price change over the prior 24-hour window"
+      - name: snapshot_at
+        description: "UTC timestamp of the snapshot this row came from"
       - name: mover_type
-        description: "Either 'top_gainer' or 'top_loser'"
+        description: "Classification: 'top_gainer' (top 10 by 24h %) or 'top_loser' (bottom 10)"
         data_tests:
           - not_null
           - accepted_values:
