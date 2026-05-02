@@ -19,7 +19,6 @@ import streamlit as st
 # ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="CryptoPulse",
-    page_icon="📈",
     layout="wide",
 )
 
@@ -55,7 +54,7 @@ last_updated = pd.Timestamp(daily["snapshot_at"].max()).strftime("%Y-%m-%d %H:%M
 # ---------------------------------------------------------------------------
 # Header
 # ---------------------------------------------------------------------------
-st.title("📈 CryptoPulse")
+st.title("CryptoPulse")
 st.caption(
     f"Top-100 crypto prices · Source: CoinGecko (free tier, no API key) · "
     f"Updated every 6 h via GitHub Actions · Last snapshot: **{last_updated}**"
@@ -89,7 +88,7 @@ MOVER_COLS = {
 col_gain, col_lose = st.columns(2)
 
 with col_gain:
-    st.markdown("### 🚀 Top Gainers")
+    st.markdown("### Top Gainers")
     st.dataframe(
         gainers[list(MOVER_COLS)].rename(columns=MOVER_COLS),
         use_container_width=True,
@@ -101,7 +100,7 @@ with col_gain:
     )
 
 with col_lose:
-    st.markdown("### 📉 Top Losers")
+    st.markdown("### Top Losers")
     st.dataframe(
         losers[list(MOVER_COLS)].rename(columns=MOVER_COLS),
         use_container_width=True,
