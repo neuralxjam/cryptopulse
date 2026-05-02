@@ -9,9 +9,11 @@ dependencies = [
     "dbt-duckdb>=1.10.1",
     "duckdb>=1.5.2",
     "httpx>=0.28.1",
+    "pandas>=3.0.2",
     "pyarrow>=24.0.0",
     "pydantic>=2.13.3",
     "pytz>=2026.1.post1",
+    "streamlit>=1.57.0",
     "tzdata>=2026.2",
 ]
 
