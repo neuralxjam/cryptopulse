@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: main
+    description: "Raw tables written by load.py"
+    tables:
+      - name: raw_prices
+        description: >
+          Append-only table of CoinGecko top-100 snapshots.
+          Each ingest run adds 100 rows tagged with ingested_at.
+
+models:
+  - name: stg_prices
+    description: >
+      Cleaned, renamed view on raw_prices. Marts should always
+      reference this model, never raw_prices directly.
+    columns:
+      - name: coin_id
+        description: "CoinGecko coin identifier (e.g. 'bitcoin')"
+        data_tests:
+          - not_null
+      - name: symbol
+        description: "Ticker symbol (e.g. 'btc')"
+        data_tests:
+          - not_null
+      - name: snapshot_at
+        description: "UTC timestamp when ingest.py pulled this snapshot"
+        data_tests:
+          - not_null

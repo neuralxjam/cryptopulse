@@ -31,6 +31,12 @@ Thumbs.db
 .env
 .env.local
 
+# --- dbt build artifacts ---
+target/
+dbt_packages/
+logs/
+.user.yml
+
 # --- Project-specific ---
 # Raw API snapshots regenerate on every run; never commit them.
 data/

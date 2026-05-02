@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: mart_daily_returns
+    description: >
+      Latest price + 24h return for every coin in the top 100,
+      from the most recent snapshot. One row per coin.
+    columns:
+      - name: coin_id
+        description: "CoinGecko coin identifier"
+        data_tests:
+          - unique
+          - not_null
+      - name: current_price
+        description: "Price in USD from the latest snapshot"
+        data_tests:
+          - not_null
+      - name: snapshot_at
+        description: "Timestamp of the snapshot this row came from"
+        data_tests:
+          - not_null
+
+  - name: mart_top_movers
+    description: >
+      Top 10 gainers + top 10 losers by 24h % change,
+      from the most recent snapshot.
+    columns:
+      - name: coin_id
+        description: "CoinGecko coin identifier"
+        data_tests:
+          - not_null
+      - name: mover_type
+        description: "Either 'top_gainer' or 'top_loser'"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['top_gainer', 'top_loser']

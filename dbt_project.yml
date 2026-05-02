@@ -1,0 +1,28 @@
+name: 'cryptopulse'
+version: '1.0.0'
+config-version: 2
+
+# Which profile in profiles.yml to use.
+profile: 'cryptopulse'
+
+# Where dbt looks for models, tests, etc.
+model-paths:   ["models"]
+test-paths:    ["tests"]
+seed-paths:    ["seeds"]
+macro-paths:   ["macros"]
+snapshot-paths: ["snapshots"]
+
+# dbt build artifacts — gitignored.
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  cryptopulse:
+    staging:
+      # Staging models are cheap views — no storage cost, always fresh.
+      +materialized: view
+    marts:
+      # Mart models are tables — pre-computed so the Streamlit dashboard
+      # reads instantly without re-running window functions each time.
+      +materialized: table
