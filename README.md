@@ -2,7 +2,7 @@
 
 > Daily crypto market ETL pipeline + live dashboard — Python · DuckDB · dbt · Streamlit · GitHub Actions
 
-**[🚀 Live Demo](https://cryptopulse.streamlit.app)** &nbsp;|&nbsp; **[GitHub Actions runs](../../actions)**
+**[🚀 Live Demo](https://cryptopulse.streamlit.app)** &nbsp;|&nbsp; **[📖 Portfolio write-up](https://neuralxjam.github.io/projects/cryptopulse)** &nbsp;|&nbsp; **[GitHub Actions runs](../../actions)**
 
 ---
 
