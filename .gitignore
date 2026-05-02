@@ -41,6 +41,5 @@ logs/
 # Raw API snapshots regenerate on every run; never commit them.
 data/
 
-# DuckDB file lands here in Day 12; treat the same way (ephemeral, regen-able).
-*.duckdb
+# DuckDB WAL (write-ahead log) — transient, never commit.
 *.duckdb.wal
