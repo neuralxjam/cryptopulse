@@ -1,0 +1,58 @@
+name: Crypto ETL Pipeline
+
+on:
+  schedule:
+    # Every 6 hours at :00 UTC — 00:00, 06:00, 12:00, 18:00
+    - cron: '0 */6 * * *'
+  # Also allows manual one-click trigger from the Actions tab
+  workflow_dispatch:
+
+# Must be write so the job can push cryptopulse.duckdb back to the repo.
+permissions:
+  contents: write
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.11.8"
+
+      - name: Install Python 3.11
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        # uv sync reads uv.lock — exact same versions as local dev
+        run: uv sync
+
+      - name: Ingest — fetch top-100 from CoinGecko
+        run: uv run python ingest.py
+
+      - name: Load — append Parquet snapshot into DuckDB
+        run: uv run python load.py
+
+      - name: dbt run — rebuild staging + mart models
+        run: uv run dbt run --profiles-dir .
+
+      - name: dbt test — assert data quality
+        run: uv run dbt test --profiles-dir . --no-partial-parse
+
+      - name: Commit updated DuckDB back to repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase
+          git add cryptopulse.duckdb
+          # Only commit if the file actually changed (diff exits 1 if staged changes exist)
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: auto-update crypto data $(date -u +'%Y-%m-%dT%H:%M:%SZ') [skip ci]"
+            git push
+          else
+            echo "No changes to DuckDB — skipping commit."
+          fi
