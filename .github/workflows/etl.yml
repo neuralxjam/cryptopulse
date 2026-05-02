@@ -47,11 +47,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase
           git add cryptopulse.duckdb
-          # Only commit if the file actually changed (diff exits 1 if staged changes exist)
+          # Only commit + push if the file actually changed
           if ! git diff --staged --quiet; then
             git commit -m "chore: auto-update crypto data $(date -u +'%Y-%m-%dT%H:%M:%SZ') [skip ci]"
+            git pull --rebase   # rebase our commit on top of any concurrent pushes
             git push
           else
             echo "No changes to DuckDB — skipping commit."
