@@ -111,8 +111,3 @@ cryptopulse/
 - **Git history grows** — the DuckDB binary is committed on every pipeline run. Fine for a portfolio project; production would use S3/R2.
 - **Single-file DuckDB** — no concurrent writes; safe because only one Actions job runs at a time.
 - **CoinGecko free tier** — rate-limited; occasional 429s are handled gracefully (next run picks up the data).
-
----
-
-*Built as part of a 25-day portfolio sprint targeting entry-level Data Engineering roles.*
-*See [neuralxjam/portfolio](https://github.com/neuralxjam/portfolio) for the full project roadmap.*
